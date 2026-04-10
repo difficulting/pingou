@@ -5,4 +5,7 @@ export const CONFIG = {
 		// General Roles
 		EVERYONE: "",
 	},
+	CHANNELS: {
+		SUGGESTIONS: "1486721405583364254",
+	},
 };
