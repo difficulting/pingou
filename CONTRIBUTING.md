@@ -34,6 +34,10 @@ Esto instala los hooks de Husky para validar commits, lint y formato automática
 
 Copia el archivo .env.example a .env y completa las variables de entorno.
 
+```bash
+cp .env.example .env
+```
+
 ---
 
 ## Convenciones de Commits
@@ -78,7 +82,7 @@ Antes de hacer commit, asegúrate de que tu código pase las validaciones de Bio
 
 ```bash
 # Verificar formato y errores
-bun run check
+bun run format:check
 
 # Corregir formato automáticamente
 bun run format
