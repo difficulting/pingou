@@ -2,6 +2,7 @@ import { Client, type ParseClient, type ParseMiddlewares } from "seyfert";
 import type { CONFIG } from "./config/config";
 import { middlewares } from "./middlewares";
 import { cooldownService } from "./services/cooldown";
+import { moderationService } from "./services/moderationService";
 
 async function boostrap() {
 	const client = new Client();
@@ -18,11 +19,13 @@ async function boostrap() {
 	setInterval(
 		() => {
 			cooldownService.cleanup().catch(console.error);
+			moderationService.cleanupExpiredLimits().catch(console.error);
 		},
 		1000 * 60 * 60,
 	);
 
 	await cooldownService.cleanup().catch(console.error);
+	await moderationService.cleanupExpiredLimits().catch(console.error);
 }
 
 await boostrap().catch((error) => {

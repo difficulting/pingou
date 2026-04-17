@@ -32,8 +32,12 @@ export default class AIReplyButton extends ComponentCommand {
 			content: "✅ Respuesta generada y enviada al hilo.",
 		});
 
-		await ctx.client.messages.write(ctx.channelId, {
-			embeds: [Embeds.aiReplyEmbed(text, usage)],
-		});
+		const embeds = Embeds.aiReplyEmbeds(text, usage);
+
+		for (const embed of embeds) {
+			await ctx.client.messages.write(ctx.channelId, {
+				embeds: [embed],
+			});
+		}
 	}
 }

@@ -3,6 +3,7 @@ import { CONFIG } from "../config/config";
 import { reputationRepository } from "../repositories/reputationRepository";
 import { jobService } from "../services/jobService";
 import { Embeds } from "../utils/embeds";
+import { fetchDisplayUser } from "../utils/moderation";
 
 export default class JobButtons extends ComponentCommand {
 	override componentType = "Button" as const;
@@ -24,11 +25,14 @@ export default class JobButtons extends ComponentCommand {
 		}
 	}
 
+	private getUserIdFromCustomId(customId: string) {
+		return customId.split("-")[2];
+	}
+
 	private async handleApprove(
 		ctx: ComponentContext<typeof this.componentType>,
 	) {
-		const parts = ctx.customId.split("-");
-		const userId = parts[2];
+		const userId = this.getUserIdFromCustomId(ctx.customId);
 		if (!userId) return;
 
 		const jobId = ctx.interaction.message.id;
@@ -44,12 +48,12 @@ export default class JobButtons extends ComponentCommand {
 			});
 		}
 
-		const user = await ctx.client.users.fetch(userId);
+		const user = await fetchDisplayUser(ctx.client, userId);
 
 		const jobEmbed = Embeds.jobOfferEmbed({
 			...jobData,
-			authorName: `Publicada por ${user.username}`,
-			authorIcon: user.avatarURL(),
+			authorName: `Publicada por ${user.tag}`,
+			authorIcon: user.avatar,
 		});
 
 		await ctx.client.messages.write(CONFIG.CHANNELS.JOBS_OFFERS, {
@@ -85,8 +89,7 @@ export default class JobButtons extends ComponentCommand {
 	}
 
 	private async handleReject(ctx: ComponentContext<typeof this.componentType>) {
-		const parts = ctx.customId.split("-");
-		const userId = parts[2];
+		const userId = this.getUserIdFromCustomId(ctx.customId);
 		if (!userId) return;
 
 		const jobId = ctx.interaction.message.id;

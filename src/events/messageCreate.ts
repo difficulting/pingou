@@ -55,9 +55,10 @@ export default createEvent({
 
 			await cooldownService.setCooldown(userId, cooldownKey, 15);
 
-			await message.reply({
-				embeds: [Embeds.aiReplyEmbed(text, usage)],
-			});
+			const embeds = Embeds.aiReplyEmbeds(text, usage);
+			for (const embed of embeds) {
+				await message.reply({ embeds: [embed] });
+			}
 		}
 	},
 });

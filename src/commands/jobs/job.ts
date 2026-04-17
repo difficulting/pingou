@@ -7,7 +7,8 @@ import {
 	Modal,
 	TextInput,
 } from "seyfert";
-import { TextInputStyle } from "seyfert/lib/types";
+import { MessageFlags, TextInputStyle } from "seyfert/lib/types";
+import { CONFIG } from "../../config/config";
 
 @Declare({
 	name: "empleo",
@@ -20,6 +21,13 @@ import { TextInputStyle } from "seyfert/lib/types";
 @Middlewares(["cooldown"])
 export default class JobCommand extends Command {
 	override async run(ctx: CommandContext) {
+		if (ctx.member?.roles.keys.includes(CONFIG.RESTRICTIONS.EMPLEOS)) {
+			return ctx.editOrReply({
+				content: "❌ Tienes restringido el uso de este comando.",
+				flags: MessageFlags.Ephemeral,
+			});
+		}
+
 		const modal = new Modal()
 			.setCustomId("job-modal")
 			.setTitle("Nueva Oferta de Empleo")
