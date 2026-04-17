@@ -31,6 +31,7 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
+		"@google/genai": "^1.50.0",
 		"drizzle-orm": "^0.45.2",
 		"pg": "^8.20.0",
 		"seyfert": "^4.3.0"

@@ -1,6 +1,7 @@
 import { Client, type ParseClient, type ParseMiddlewares } from "seyfert";
 import type { CONFIG } from "./config/config";
 import { middlewares } from "./middlewares";
+import { CooldownService } from "./services/Cooldown";
 
 async function boostrap() {
 	const client = new Client();
@@ -9,14 +10,22 @@ async function boostrap() {
 		middlewares: middlewares,
 	});
 
-	client.start().then(() =>
-		client.uploadCommands({
-			cachePath: "./commands.json",
-		}),
+	await client.start();
+	await client.uploadCommands({
+		cachePath: "./commands.json",
+	});
+
+	setInterval(
+		() => {
+			CooldownService.cleanup().catch(console.error);
+		},
+		1000 * 60 * 60,
 	);
+
+	await CooldownService.cleanup().catch(console.error);
 }
 
-boostrap().catch((error) => {
+await boostrap().catch((error) => {
 	console.log(error);
 	process.exit(1);
 });
@@ -31,5 +40,7 @@ declare module "seyfert" {
 
 	interface ExtraProps {
 		requiredRoles?: Roles[];
+		cooldown?: number;
+		cooldownKey?: string;
 	}
 }

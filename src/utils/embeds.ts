@@ -1,3 +1,4 @@
+import type { GenerateContentResponseUsageMetadata } from "@google/genai";
 import { type CommandContext, Embed } from "seyfert";
 
 export const Embeds = {
@@ -36,5 +37,20 @@ export const Embeds = {
 				name: "Sugerencia registrada con exito",
 				iconUrl: ctx.author.avatarURL(),
 			});
+	},
+
+	aiReplyEmbed(
+		reply: string,
+		usage?: GenerateContentResponseUsageMetadata,
+	): Embed {
+		const input = usage?.promptTokenCount ?? 0;
+		const output = (usage?.totalTokenCount ?? 0) - input;
+
+		const footerText = usage
+			? `✨ Respuesta generada por IA | I: ${input} tokens | O: ${output} tokens`
+			: "✨ Respuesta generada por IA";
+		return new Embed().setDescription(reply).setColor("Blue").setFooter({
+			text: footerText,
+		});
 	},
 };

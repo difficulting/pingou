@@ -5,6 +5,8 @@ export default config.bot({
 	locations: {
 		base: "src",
 		commands: "commands",
+		events: "events",
+		components: "components",
 	},
 	intents: [
 		"Guilds",
