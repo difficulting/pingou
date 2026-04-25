@@ -3,6 +3,7 @@ import type { CONFIG } from "./config/config";
 import { middlewares } from "./middlewares";
 import { cooldownService } from "./services/cooldown";
 import { moderationService } from "./services/moderationService";
+import { voiceRestrictService } from "./services/voiceRestrictService";
 
 async function boostrap() {
 	const client = new Client();
@@ -26,6 +27,7 @@ async function boostrap() {
 
 	await cooldownService.cleanup().catch(console.error);
 	await moderationService.cleanupExpiredLimits().catch(console.error);
+	await voiceRestrictService.recoverOnStartup(client).catch(console.error);
 }
 
 await boostrap().catch((error) => {
