@@ -1,5 +1,4 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
-import { primaryKey } from "drizzle-orm/pg-core";
+import { integer, pgTable, primaryKey, varchar } from "drizzle-orm/pg-core";
 
 export const inviteStats = pgTable(
 	"invite_stats",
