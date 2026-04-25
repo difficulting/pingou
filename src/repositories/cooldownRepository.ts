@@ -1,4 +1,4 @@
-import { eq, lt } from "drizzle-orm";
+import { eq, like, lt } from "drizzle-orm";
 import { db } from "../database";
 import { cooldowns } from "../database/schemas/cooldowns";
 
@@ -29,6 +29,13 @@ export class CooldownRepository {
 
 	async deleteById(id: string) {
 		return await db.delete(cooldowns).where(eq(cooldowns.id, id));
+	}
+
+	async findByKeyPrefix(prefix: string) {
+		return await db
+			.select()
+			.from(cooldowns)
+			.where(like(cooldowns.key, `${prefix}%`));
 	}
 
 	async deleteExpired(date: Date) {
