@@ -232,7 +232,7 @@ export default createEvent({
 			referencedContent,
 		});
 
-		const approveButtons = receivers.map((r, i) =>
+		const approveButtons = receivers.map((_r, i) =>
 			new Button()
 				.setCustomId(`rep-approve-${i}`)
 				.setLabel(`${i + 1}`)
