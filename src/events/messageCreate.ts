@@ -3,9 +3,11 @@ import { ButtonStyle } from "seyfert/lib/types";
 import { CONFIG } from "../config/config";
 import { pendingRepRepository } from "../repositories/pendingRepRepository";
 import { aiService } from "../services/ai";
+import { bumpService } from "../services/bumpService";
 import { cooldownService } from "../services/cooldown";
 import { Embeds } from "../utils/embeds";
 
+const DISBOARD_ID = "302050872383242240";
 const THANKS_TERMS = [
 	"gracias",
 	"grax",
@@ -39,6 +41,11 @@ function containsThanks(text: string): boolean {
 export default createEvent({
 	data: { once: false, name: "messageCreate" },
 	async run(message, client) {
+		if (message.author.id === DISBOARD_ID) {
+			await bumpService.handleBump(message);
+			return;
+		}
+
 		if (message.author.bot) return;
 
 		// AI mention reply

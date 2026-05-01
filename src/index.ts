@@ -1,8 +1,10 @@
 import { Client, type ParseClient, type ParseMiddlewares } from "seyfert";
 import type { CONFIG } from "./config/config";
 import { middlewares } from "./middlewares";
+import { bumpService } from "./services/bumpService";
 import { cooldownService } from "./services/cooldown";
 import { moderationService } from "./services/moderationService";
+import { schedulerService } from "./services/scheduler";
 import { voiceRestrictService } from "./services/voiceRestrictService";
 
 async function boostrap() {
@@ -28,6 +30,8 @@ async function boostrap() {
 	await cooldownService.cleanup().catch(console.error);
 	await moderationService.cleanupExpiredLimits().catch(console.error);
 	await voiceRestrictService.recoverOnStartup(client).catch(console.error);
+	await bumpService.ensureBumpRole(client).catch(console.error);
+	await schedulerService.recoverOnStartup(client).catch(console.error);
 }
 
 await boostrap().catch((error) => {
