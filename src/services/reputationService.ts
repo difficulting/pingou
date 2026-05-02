@@ -16,8 +16,8 @@ export interface AddRep {
 	guildId: string;
 	receiverId: string;
 	giverId: string;
-	amount: number;
-	reason: string;
+	amount?: number;
+	reason?: string;
 }
 
 export class ReputationService {

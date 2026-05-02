@@ -109,16 +109,16 @@ export default class AddRepCommand extends Command {
 			});
 		}
 
-		if (CONFIG.CHANNELS.REP_LOG) {
-			await reputationService.sendLogRep(ctx.client, {
+		await reputationService
+			.sendLogRep(ctx.client, {
 				giverId: ctx.author.id,
 				giverName: ctx.author.name,
 				newRoles: addedRoles,
 				points,
 				receiverId: user.id,
 				receiverName: user.name,
-			});
-		}
+			})
+			.catch(console.error);
 
 		const singular = amount === 1;
 
