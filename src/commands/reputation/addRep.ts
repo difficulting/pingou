@@ -77,18 +77,20 @@ export default class AddRepCommand extends Command {
 			return;
 		}
 
-		const { points, newRoles } = await reputationService.addRepAndCheckRoles(
+		const { points, addedRoles } = await reputationService.addRepAndCheckRoles(
 			ctx.client,
-			guildId,
-			user.id,
-			ctx.author.id,
-			amount,
-			"manual",
+			{
+				guildId,
+				receiverId: user.id,
+				giverId: ctx.author.id,
+				amount,
+				reason: "manual",
+			},
 		);
 
-		if (newRoles.length) {
+		if (addedRoles.length) {
 			const roleNames = await Promise.all(
-				newRoles.map((roleId) =>
+				addedRoles.map((roleId) =>
 					ctx.client.roles
 						.fetch(guildId, roleId)
 						.then((r) => r?.name ?? roleId)
@@ -111,7 +113,7 @@ export default class AddRepCommand extends Command {
 			await reputationService.sendLogRep(ctx.client, {
 				giverId: ctx.author.id,
 				giverName: ctx.author.name,
-				newRoles,
+				newRoles: addedRoles,
 				points,
 				receiverId: user.id,
 				receiverName: user.name,
@@ -126,7 +128,7 @@ export default class AddRepCommand extends Command {
 					"Reputación agregada",
 					cleanString`Se agreg${singular ? "ó" : "aron"} **${amount}** punto${singular ? "" : "s"}* de reputación a <@${user.id}>.
                     Puntos actuales: **${points}**
-                    ${newRoles.length > 0 ? `Nuevo rol: ${newRoles.map((r) => `<@&${r}>`).join(", ")}` : ""}`,
+                    ${addedRoles.length > 0 ? `Nuevo rol: ${addedRoles.map((r) => `<@&${r}>`).join(", ")}` : ""}`,
 				),
 			],
 			flags: MessageFlags.Ephemeral,
