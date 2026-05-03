@@ -19,9 +19,9 @@
 
         nativeBuildInputs = [
           pkgs.bun
-          pkgs.typescript-language-server
+          pkgs.vtsls
           pkgs.typescript
-          pkgs.husky
+          pkgs.lefthook
         ];
         buildInputs = with pkgs; [ ];
       in
